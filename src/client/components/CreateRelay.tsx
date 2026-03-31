@@ -113,7 +113,7 @@ export function CreateRelay({ onCreated }: CreateRelayProps) {
           </div>
 
           <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-3">
-            <span className="text-[11px] font-medium text-zinc-500">Alias address</span>
+            <span className="text-[11px] font-medium text-zinc-500">Secondary address</span>
             <div className="mt-1 flex items-center justify-between gap-2">
               <code className="truncate text-sm font-medium text-zinc-200">{result.aliasAddress}</code>
               <button type="button" onClick={() => handleCopyAddress(result.aliasAddress)} className="shrink-0 text-zinc-500 hover:text-zinc-300">

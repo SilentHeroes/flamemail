@@ -199,6 +199,11 @@ export function InboxView({ onDeleted }: InboxViewProps) {
             <span className="text-xs text-zinc-500">{socketState}</span>
           </div>
           <h1 className="mt-1 truncate text-base font-semibold text-zinc-100">{address}</h1>
+          {inbox?.isRelay && inbox.relayAliasAddress ? (
+            <p className="mt-0.5 text-xs text-zinc-500">
+              Secondary: <span className="font-medium text-zinc-300">{inbox.relayAliasAddress}</span>
+            </p>
+          ) : null}
           <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
             {inbox?.isPermanent ? (
               <span className="text-sm text-zinc-500">Permanent inbox</span>
@@ -228,6 +233,23 @@ export function InboxView({ onDeleted }: InboxViewProps) {
             <Copy className="h-3.5 w-3.5" />
             Copy
           </button>
+          {inbox?.isRelay && inbox.relayAliasAddress ? (
+            <button
+              className="flex items-center gap-1.5 rounded-md border border-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-800"
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(inbox.relayAliasAddress!);
+                  toast.success("Secondary address copied");
+                } catch {
+                  toast.error("Could not copy address");
+                }
+              }}
+            >
+              <Copy className="h-3.5 w-3.5" />
+              Copy 2nd
+            </button>
+          ) : null}
           {!adminMode ? (
             <button
               className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-500"

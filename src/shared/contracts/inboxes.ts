@@ -46,6 +46,7 @@ export const InboxInfo = eg.object({
   isPermanent: eg.boolean,
   isRelay: eg.boolean,
   hasNotification: eg.boolean,
+  relayAliasAddress: NullableString,
   ttlHours: NullableTempMailboxTtlHours,
   expiresAt: NullableString,
   createdAt: eg.string,

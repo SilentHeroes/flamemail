@@ -1,4 +1,5 @@
 import type { Hono } from "hono";
+import { eq } from "drizzle-orm";
 import {
   CreateInboxRequest,
   CreateInboxResponse,
@@ -9,6 +10,7 @@ import {
   OkResponse,
   WebSocketTicketResponse,
 } from "@/shared/contracts";
+import { relayPairs } from "@/worker/db/schema";
 import { createLogger, errorContext } from "@/worker/logger";
 import { getPublicErrorMessage } from "@/worker/security";
 import { requireInboxAccess } from "@/worker/middleware/auth";
@@ -85,14 +87,25 @@ export function registerInboxRoutes(app: Hono<AppBindings>) {
 
   app.get("/api/inboxes/:address", requireInboxAccess, async (c) => {
     const inbox = c.get("inbox");
+    const db = c.get("db");
     const ttlHours = inbox.expiresAt
       ? Math.round((inbox.expiresAt.getTime() - inbox.createdAt.getTime()) / (60 * 60 * 1000))
       : null;
+
+    let relayAliasAddress: string | null = null;
+    if (inbox.isRelay) {
+      const pair = await db.query.relayPairs.findFirst({
+        where: eq(relayPairs.inboxId, inbox.id),
+      });
+      relayAliasAddress = pair?.aliasAddress ?? null;
+    }
+
     return c.json(InboxInfo.create({
       address: inbox.fullAddress,
       isPermanent: inbox.isPermanent,
       isRelay: inbox.isRelay ?? false,
       hasNotification: Boolean(inbox.notificationEmail),
+      relayAliasAddress,
       ttlHours: ttlHours !== null && isAllowedTempMailboxTtl(ttlHours) ? ttlHours : null,
       expiresAt: inbox.expiresAt?.toISOString() ?? null,
       createdAt: inbox.createdAt.toISOString(),
