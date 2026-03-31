@@ -49,7 +49,7 @@ export function ExternalLinkRedirect() {
               <Shield className="h-5 w-5" />
             </span>
             <div>
-              <h1 className="text-lg font-semibold text-zinc-100 sm:text-xl">Leaving Flamemail</h1>
+              <h1 className="text-lg font-semibold text-zinc-100 sm:text-xl">Leaving this site</h1>
               <p className="mt-1 text-sm text-zinc-400">Links in emails open through this safety check first.</p>
             </div>
           </div>

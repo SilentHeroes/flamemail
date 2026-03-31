@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, FileText, Loader2, Lock, MailOpen, Shield, Trash2 } from "lucide-react";
+import { Download, FileText, Loader2, Lock, MailOpen, Reply, Shield, Trash2 } from "lucide-react";
 import { toast } from "@/client/components/Toast";
 import { prepareEmailHtml } from "@/client/lib/email-html";
 import {
@@ -18,6 +18,7 @@ interface EmailDetailProps {
   canDelete: boolean;
   canViewRaw: boolean;
   onDelete: (emailId: string) => void;
+  onReply?: (fromAddress: string, subject: string) => void;
 }
 
 function formatSize(sizeBytes: number) {
@@ -71,7 +72,7 @@ function buildSrcDoc(html: string, bodyAttributes = "", headHtml = "") {
 </html>`;
 }
 
-export function EmailDetail({ address, token, email, loading, canDelete, canViewRaw, onDelete }: EmailDetailProps) {
+export function EmailDetail({ address, token, email, loading, canDelete, canViewRaw, onDelete, onReply }: EmailDetailProps) {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [downloadingRaw, setDownloadingRaw] = useState(false);
   const [allowRemoteContent, setAllowRemoteContent] = useState(false);
@@ -175,6 +176,16 @@ export function EmailDetail({ address, token, email, loading, canDelete, canView
         <div className="flex items-start justify-between gap-3">
           <h2 className="min-w-0 break-words text-base font-semibold text-zinc-100">{email.subject}</h2>
           <div className="flex shrink-0 items-center gap-2">
+            {onReply ? (
+              <button
+                className="flex items-center gap-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-1 text-xs font-medium text-indigo-300 transition-colors hover:bg-indigo-500/20"
+                type="button"
+                onClick={() => onReply(email.fromAddress, email.subject)}
+              >
+                <Reply className="h-3 w-3" />
+                Reply
+              </button>
+            ) : null}
             {canViewRaw ? (
               <button
                 className="flex items-center gap-1.5 rounded-lg border border-zinc-700/60 bg-zinc-800/60 px-2.5 py-1 text-xs font-medium text-zinc-400 transition-colors hover:border-flame-500/40 hover:bg-zinc-800/90 hover:text-zinc-200 disabled:pointer-events-none disabled:opacity-50"

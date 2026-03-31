@@ -4,6 +4,7 @@
 	"main": "src/worker/index.ts",
 	"workers_dev": false,
 	"compatibility_date": "2026-03-13",
+	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
 		"directory": "./dist/client",
 		"binding": "ASSETS",
@@ -17,7 +18,7 @@
 		{
 			"binding": "DB",
 			"database_name": "flamemail-db",
-			"database_id": "0bf20b21-ff79-4c7e-8bc3-7c59cb854a63",
+			"database_id": "295ee19f-2928-4cfc-b0e7-383204292158",
 			"migrations_dir": "drizzle"
 		}
 	],
@@ -30,7 +31,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "SESSIONS",
-			"id": "2351c44987c54f7b9c7fa0926cbfb10a"
+			"id": "2a4dd891ec4041a9a88a333490113c15"
 		}
 	],
 	"durable_objects": {
@@ -54,12 +55,21 @@
 			"0 * * * *"
 		]
 	},
+	"send_email": [
+		{
+			"name": "EMAIL_SEND"
+		}
+	],
 	"observability": {
 		"enabled": true
 	},
 	"routes": [
 		{
-			"pattern": "flamemail.devbin.tools",
+			"pattern": "mail.easydemo.org",
+			"custom_domain": true
+		},
+		{
+			"pattern": "relay.orangeclouded-tmn.net",
 			"custom_domain": true
 		}
 	]

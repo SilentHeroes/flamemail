@@ -91,6 +91,8 @@ export function registerInboxRoutes(app: Hono<AppBindings>) {
     return c.json(InboxInfo.create({
       address: inbox.fullAddress,
       isPermanent: inbox.isPermanent,
+      isRelay: inbox.isRelay ?? false,
+      hasNotification: Boolean(inbox.notificationEmail),
       ttlHours: ttlHours !== null && isAllowedTempMailboxTtl(ttlHours) ? ttlHours : null,
       expiresAt: inbox.expiresAt?.toISOString() ?? null,
       createdAt: inbox.createdAt.toISOString(),

@@ -22,6 +22,8 @@ export const inboxes = sqliteTable(
     domain: text("domain").notNull(),
     fullAddress: text("full_address").notNull().unique(),
     isPermanent: integer("is_permanent", { mode: "boolean" }).notNull().default(false),
+    isRelay: integer("is_relay", { mode: "boolean" }).notNull().default(false),
+    notificationEmail: text("notification_email"),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .notNull()
       .default(sql`(unixepoch() * 1000)`),
@@ -51,6 +53,7 @@ export const emails = sqliteTable(
       .notNull()
       .default(sql`(unixepoch() * 1000)`),
     isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
+    isSent: integer("is_sent", { mode: "boolean" }).notNull().default(false),
     sizeBytes: integer("size_bytes").default(0),
     hasAttachments: integer("has_attachments", { mode: "boolean" }).notNull().default(false),
     bodyKey: text("body_key"),
@@ -71,4 +74,26 @@ export const attachments = sqliteTable(
     storageKey: text("storage_key").notNull(),
   },
   (table) => [index("idx_attachments_email").on(table.emailId)],
+);
+
+export const relayPairs = sqliteTable(
+  "relay_pairs",
+  {
+    id: text("id").primaryKey(),
+    passphraseHash: text("passphrase_hash").notNull().unique(),
+    inboxAId: text("inbox_a_id")
+      .notNull()
+      .references(() => inboxes.id, { onDelete: "cascade" }),
+    inboxBId: text("inbox_b_id")
+      .notNull()
+      .references(() => inboxes.id, { onDelete: "cascade" }),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(unixepoch() * 1000)`),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }),
+  },
+  (table) => [
+    index("idx_relay_pairs_inbox_a").on(table.inboxAId),
+    index("idx_relay_pairs_inbox_b").on(table.inboxBId),
+  ],
 );

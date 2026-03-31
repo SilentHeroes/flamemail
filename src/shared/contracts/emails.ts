@@ -11,6 +11,7 @@ export const EmailSummary = eg.object({
   subject: eg.string,
   receivedAt: eg.string,
   isRead: eg.boolean,
+  isSent: eg.boolean,
   hasAttachments: eg.boolean,
   sizeBytes: eg.number,
 });
@@ -32,6 +33,7 @@ export const EmailDetail = eg.object({
   subject: eg.string,
   receivedAt: eg.string,
   isRead: eg.boolean,
+  isSent: eg.boolean,
   hasAttachments: eg.boolean,
   sizeBytes: eg.number,
   text: NullableString,

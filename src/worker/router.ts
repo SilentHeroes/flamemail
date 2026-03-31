@@ -6,6 +6,7 @@ import { registerConfigRoutes } from "@/worker/api/config";
 import { registerDomainRoutes } from "@/worker/api/domains";
 import { registerEmailRoutes } from "@/worker/api/emails";
 import { registerInboxRoutes } from "@/worker/api/inboxes";
+import { registerRelayRoutes } from "@/worker/api/relay";
 import { createDb } from "@/worker/db";
 import { createLogger, errorContext } from "@/worker/logger";
 import type { AppBindings } from "@/worker/types";
@@ -23,6 +24,7 @@ const REPLICA_FRIENDLY_ROUTES = [
   /^\/api\/admin\/domains$/,
   /^\/api\/admin\/inboxes$/,
   /^\/api\/admin\/temp-inboxes$/,
+  /^\/api\/inboxes\/[^/]+\/notification$/,
 ];
 
 function selectSessionConstraint(method: string, path: string): D1SessionConstraint {
@@ -53,6 +55,7 @@ registerConfigRoutes(app);
 registerDomainRoutes(app);
 registerInboxRoutes(app);
 registerEmailRoutes(app);
+registerRelayRoutes(app);
 registerAdminRoutes(app);
 
 app.notFound((c) => c.json(ErrorResponse.create({ error: "Not found" }), 404));

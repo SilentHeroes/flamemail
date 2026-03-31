@@ -8,7 +8,11 @@ import {
   AdminTempInboxPage,
   CreateInboxRequest,
   CreateInboxResponse,
+  CreateRelayRequest,
+  CreateRelayResponse,
   DomainsResponse,
+  SendEmailRequest,
+  SendEmailResponse,
   EmailDetail,
   EmailPage,
   ErrorResponse,
@@ -18,14 +22,17 @@ import {
   InboxSession,
   InboxSessionSummary,
   InboxSessionSummaryList,
+  NotificationStatusResponse,
   OkResponse,
   PublicConfigResponse,
+  SetNotificationRequest,
   TokenResponse,
   WebSocketTicketResponse,
   type AdminDomain,
   type AdminInbox,
   type AdminTempInbox,
   type AdminTempInboxPage as AdminTempInboxPageType,
+  type CreateRelayResponse as CreateRelayResponseType,
   type EmailAttachment,
   type EmailDetail as EmailDetailType,
   type EmailSummary,
@@ -43,6 +50,7 @@ export type {
   AdminInbox,
   AdminTempInbox,
   AdminTempInboxPageType as AdminTempInboxPage,
+  CreateRelayResponseType as CreateRelayResponse,
   EmailAttachment,
   EmailDetailType as EmailDetail,
   EmailSummary,
@@ -336,6 +344,61 @@ export async function createWebSocketTicket(address: string, token: string) {
     token,
     bookmarkScope: getInboxBookmarkScope(address),
   });
+}
+
+export async function createRelay(passphrase: string, ttlHours: TempMailboxTtlHours, turnstileToken: string) {
+  let bookmark: string | null = null;
+  const response = await request("/api/relay", CreateRelayResponse, {
+    method: "POST",
+    body: encodeJsonBody(CreateRelayRequest, { passphrase, ttlHours, turnstileToken }),
+    onBookmark: (value) => {
+      bookmark = value;
+    },
+  });
+
+  if (bookmark) {
+    setStoredBookmark(getInboxBookmarkScope(response.addressA), bookmark);
+    setStoredBookmark(getInboxBookmarkScope(response.addressB), bookmark);
+  }
+
+  return response;
+}
+
+export async function setNotificationEmail(address: string, token: string, email: string) {
+  return request(
+    `/api/inboxes/${encodeURIComponent(address)}/notification`,
+    NotificationStatusResponse,
+    {
+      method: "PUT",
+      token,
+      bookmarkScope: getInboxBookmarkScope(address),
+      body: encodeJsonBody(SetNotificationRequest, { email }),
+    },
+  );
+}
+
+export async function getNotificationStatus(address: string, token: string) {
+  return request(
+    `/api/inboxes/${encodeURIComponent(address)}/notification`,
+    NotificationStatusResponse,
+    {
+      token,
+      bookmarkScope: getInboxBookmarkScope(address),
+    },
+  );
+}
+
+export async function sendEmail(address: string, token: string, to: string, subject: string, body: string) {
+  return request(
+    `/api/inboxes/${encodeURIComponent(address)}/send`,
+    SendEmailResponse,
+    {
+      method: "POST",
+      token,
+      bookmarkScope: getInboxBookmarkScope(address),
+      body: encodeJsonBody(SendEmailRequest, { to, subject, body }),
+    },
+  );
 }
 
 export async function adminLogin(password: string, turnstileToken: string) {

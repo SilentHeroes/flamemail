@@ -6,7 +6,7 @@ import { requireInboxAccess } from "@/worker/middleware/auth";
 import { deleteStorageForEmails, getRawStorageKey, readEmailBody } from "@/worker/services/storage";
 import type { AppBindings } from "@/worker/types";
 
-function toSummary(email: Pick<typeof emails.$inferSelect, "id" | "recipientAddress" | "fromAddress" | "fromName" | "subject" | "receivedAt" | "isRead" | "hasAttachments" | "sizeBytes">) {
+function toSummary(email: Pick<typeof emails.$inferSelect, "id" | "recipientAddress" | "fromAddress" | "fromName" | "subject" | "receivedAt" | "isRead" | "isSent" | "hasAttachments" | "sizeBytes">) {
   return {
     id: email.id,
     recipientAddress: email.recipientAddress,
@@ -15,6 +15,7 @@ function toSummary(email: Pick<typeof emails.$inferSelect, "id" | "recipientAddr
     subject: email.subject ?? "(no subject)",
     receivedAt: email.receivedAt.toISOString(),
     isRead: email.isRead,
+    isSent: email.isSent,
     hasAttachments: email.hasAttachments,
     sizeBytes: email.sizeBytes ?? 0,
   };
@@ -37,6 +38,7 @@ export function registerEmailRoutes(app: Hono<AppBindings>) {
         subject: emails.subject,
         receivedAt: emails.receivedAt,
         isRead: emails.isRead,
+        isSent: emails.isSent,
         hasAttachments: emails.hasAttachments,
         sizeBytes: emails.sizeBytes,
       })
@@ -89,6 +91,7 @@ export function registerEmailRoutes(app: Hono<AppBindings>) {
       subject: emailRecord.subject ?? "(no subject)",
       receivedAt: emailRecord.receivedAt.toISOString(),
       isRead: shouldMarkRead ? true : emailRecord.isRead,
+      isSent: emailRecord.isSent,
       hasAttachments: emailRecord.hasAttachments,
       sizeBytes: emailRecord.sizeBytes ?? 0,
       text: body.text,

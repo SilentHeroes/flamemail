@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Clock, Copy, RefreshCw, Timer, Trash2, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Clock, Copy, RefreshCw, Send, Timer, Trash2, ShieldAlert } from "lucide-react";
+import { ComposeEmail } from "@/client/components/ComposeEmail";
 import { EmailDetail } from "@/client/components/EmailDetail";
 import { EmailList } from "@/client/components/EmailList";
+import { RelayNotification } from "@/client/components/RelayNotification";
 import { toast } from "@/client/components/Toast";
 import { useInbox } from "@/client/hooks/useInbox";
 import { useWebSocket } from "@/client/hooks/useWebSocket";
@@ -54,6 +56,9 @@ export function InboxView({ onDeleted }: InboxViewProps) {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const [extendingTo, setExtendingTo] = useState<TempMailboxTtlHours | null>(null);
+  const [composing, setComposing] = useState(false);
+  const [replyTo, setReplyTo] = useState<string | undefined>();
+  const [replySubject, setReplySubject] = useState<string | undefined>();
 
   const address = useMemo(() => decodeURIComponent(params.address ?? ""), [params.address]);
   const userSession = address ? getInboxSession(address) : null;
@@ -224,6 +229,20 @@ export function InboxView({ onDeleted }: InboxViewProps) {
             <Copy className="h-3.5 w-3.5" />
             Copy
           </button>
+          {!adminMode ? (
+            <button
+              className="flex items-center gap-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-3 py-1.5 text-xs font-medium text-indigo-300 transition-colors hover:bg-indigo-500/20"
+              type="button"
+              onClick={() => {
+                setReplyTo(undefined);
+                setReplySubject(undefined);
+                setComposing(true);
+              }}
+            >
+              <Send className="h-3.5 w-3.5" />
+              Compose
+            </button>
+          ) : null}
           <button
             className="flex items-center gap-1.5 rounded-lg border border-zinc-700/60 bg-zinc-800/60 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-700/60"
             type="button"
@@ -256,6 +275,25 @@ export function InboxView({ onDeleted }: InboxViewProps) {
           ) : null}
         </div>
       </section>
+
+      {inbox?.isRelay && !adminMode ? (
+        <RelayNotification
+          address={address}
+          token={session.token}
+          hasNotification={inbox.hasNotification}
+        />
+      ) : null}
+
+      {composing && !adminMode ? (
+        <ComposeEmail
+          address={address}
+          token={session.token}
+          replyTo={replyTo}
+          replySubject={replySubject}
+          onClose={() => setComposing(false)}
+          onSent={() => void refresh()}
+        />
+      ) : null}
 
       {error ? (
         <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400">
@@ -294,6 +332,11 @@ export function InboxView({ onDeleted }: InboxViewProps) {
             canDelete={canDeleteEmail}
             canViewRaw={adminMode}
             onDelete={(emailId) => void removeEmail(emailId)}
+            onReply={!adminMode ? (fromAddress, subject) => {
+              setReplyTo(fromAddress);
+              setReplySubject(subject);
+              setComposing(true);
+            } : undefined}
           />
         </div>
       </div>

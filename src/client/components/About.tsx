@@ -21,10 +21,10 @@ export function About() {
     <main className="animate-slide-up mx-auto max-w-3xl space-y-10 pt-2">
       {/* Intro */}
       <section>
-        <h1 className="text-xl font-bold text-zinc-100 sm:text-2xl">About Flamemail</h1>
+        <h1 className="text-xl font-bold text-zinc-100 sm:text-2xl">About</h1>
         <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
-          Flamemail is a temporary email service that runs entirely on Cloudflare's developer platform.
-          It provides disposable inboxes with real-time email delivery, sandboxed HTML rendering, and automatic cleanup — no
+          A temporary email service that runs entirely on Cloudflare's developer platform.
+          Disposable inboxes with real-time email delivery, secure relay channels, sandboxed HTML rendering, and automatic cleanup — no
           traditional server required.
         </p>
       </section>

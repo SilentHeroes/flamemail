@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-dom";
-import { Clock, Mail } from "lucide-react";
+import { Clock, Mail, Zap } from "lucide-react";
 import { About } from "@/client/components/About";
 import { AdminLogin } from "@/client/components/AdminLogin";
 import { CreateInbox } from "@/client/components/CreateInbox";
+import { CreateRelay } from "@/client/components/CreateRelay";
 import { ExternalLinkRedirect } from "@/client/components/ExternalLinkRedirect";
 import { Header } from "@/client/components/Header";
 import { InboxView } from "@/client/components/InboxView";
@@ -19,16 +20,52 @@ function HomePage({
   onCreated: (session: InboxSession) => void;
 }) {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<"inbox" | "relay">("inbox");
+
+  const handleCreated = (session: InboxSession) => {
+    onCreated(session);
+    navigate(`/inbox/${encodeURIComponent(session.address)}`);
+  };
 
   return (
     <main className="animate-slide-up pt-2">
       <div className="grid gap-6 lg:grid-cols-[minmax(280px,440px)_minmax(0,1fr)]">
-        <CreateInbox
-          onCreated={(session) => {
-            onCreated(session);
-            navigate(`/inbox/${encodeURIComponent(session.address)}`);
-          }}
-        />
+        <div>
+          <div className="mb-3 flex gap-1 rounded-xl bg-zinc-900/50 p-1">
+            <button
+              type="button"
+              onClick={() => setActiveTab("inbox")}
+              className={[
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                activeTab === "inbox"
+                  ? "bg-zinc-800 text-zinc-100 shadow-sm"
+                  : "text-zinc-500 hover:text-zinc-300",
+              ].join(" ")}
+            >
+              <Mail className="h-3.5 w-3.5" />
+              Inbox
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("relay")}
+              className={[
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                activeTab === "relay"
+                  ? "bg-zinc-800 text-zinc-100 shadow-sm"
+                  : "text-zinc-500 hover:text-zinc-300",
+              ].join(" ")}
+            >
+              <Zap className="h-3.5 w-3.5" />
+              Secure Relay
+            </button>
+          </div>
+
+          {activeTab === "inbox" ? (
+            <CreateInbox onCreated={handleCreated} />
+          ) : (
+            <CreateRelay onCreated={handleCreated} />
+          )}
+        </div>
 
         <section className="rounded-2xl border border-zinc-800/60 bg-zinc-900/50 p-6">
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-500">

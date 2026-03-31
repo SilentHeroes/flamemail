@@ -27,6 +27,7 @@
     "drizzle-orm": "latest",
     "hono": "latest",
     "lucide-react": "^0.577.0",
+    "mimetext": "^3.0.28",
     "nanoid": "latest",
     "postal-mime": "latest",
     "react": "latest",

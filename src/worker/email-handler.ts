@@ -5,6 +5,7 @@ import { NewEmailNotification } from "@/shared/contracts";
 import { createDb } from "@/worker/db";
 import { attachments, domains, emails, inboxes } from "@/worker/db/schema";
 import { createLogger, errorContext } from "@/worker/logger";
+import { getRelayPartner, sendRelayNotification } from "@/worker/services/relay";
 import {
   getAttachmentStorageKey,
   getBodyStorageKey,
@@ -229,6 +230,7 @@ export async function handleIncomingEmail(
         subject: parsed.subject ?? "(no subject)",
         receivedAt: receivedAt.toISOString(),
         isRead: false,
+        isSent: false,
         hasAttachments: attachmentRecords.length > 0,
         sizeBytes: message.rawSize,
       },
@@ -246,6 +248,36 @@ export async function handleIncomingEmail(
         });
       }
     })());
+
+    // Relay notification: if this is a relay inbox, notify the partner via email
+    if (inbox.isRelay) {
+      ctx.waitUntil((async () => {
+        try {
+          const partner = await getRelayPartner(env, inbox.id, db);
+          if (!partner?.notificationEmail) {
+            return;
+          }
+
+          await sendRelayNotification(
+            env,
+            partner.notificationEmail,
+            partner.domain,
+            parsed.subject ?? "(no subject)",
+          );
+
+          logger.info("relay_email_notification_sent", "Sent relay notification to partner", {
+            recipientInbox: inbox.fullAddress,
+            partnerInbox: partner.fullAddress,
+          });
+        } catch (error) {
+          logger.warn("relay_email_notification_failed", "Failed to send relay notification", {
+            address: inbox.fullAddress,
+            emailId,
+            ...errorContext(error),
+          });
+        }
+      })());
+    }
 
     logger.info("email_stored", "Stored inbound email", {
       address: inbox.fullAddress,

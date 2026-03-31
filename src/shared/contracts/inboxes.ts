@@ -44,6 +44,8 @@ export type InboxSessionSummaryList = TypeFromCodec<typeof InboxSessionSummaryLi
 export const InboxInfo = eg.object({
   address: eg.string,
   isPermanent: eg.boolean,
+  isRelay: eg.boolean,
+  hasNotification: eg.boolean,
   ttlHours: NullableTempMailboxTtlHours,
   expiresAt: NullableString,
   createdAt: eg.string,

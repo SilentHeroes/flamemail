@@ -209,6 +209,19 @@ export function useInbox(session: SessionTarget | null, options: UseInboxOptions
     void refresh();
   }, [refresh]);
 
+  // Polling fallback: refresh email list periodically in case WebSocket misses events
+  useEffect(() => {
+    if (!address || !token) {
+      return;
+    }
+
+    const id = window.setInterval(() => {
+      void refreshEmails();
+    }, 15_000);
+
+    return () => clearInterval(id);
+  }, [address, token, refreshEmails]);
+
   return {
     inbox,
     emails,

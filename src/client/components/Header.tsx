@@ -1,4 +1,4 @@
-import { Flame, Inbox, Info, Plus, Shield } from "lucide-react";
+import { Inbox, Info, Mail, Plus, Shield } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 interface HeaderProps {
@@ -10,12 +10,12 @@ export function Header({ sessionCount = 0 }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
-          <span className="inline-grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-flame-500 to-flame-600 shadow-lg shadow-flame-500/20">
-            <Flame className="h-5 w-5 text-white" />
+          <span className="inline-grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-500/20">
+            <Mail className="h-5 w-5 text-white" />
           </span>
           <span className="hidden sm:block">
-            <strong className="block text-sm font-semibold text-zinc-100">flamemail</strong>
-            <small className="block text-xs text-zinc-500">Disposable inboxes on Cloudflare</small>
+            <strong className="block text-sm font-semibold text-zinc-100">Disposable Mail</strong>
+            <small className="block text-xs text-zinc-500">Temporary inboxes &amp; secure relay</small>
           </span>
         </Link>
 
@@ -26,7 +26,7 @@ export function Header({ sessionCount = 0 }: HeaderProps) {
             className={({ isActive }) =>
               `flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-flame-500/10 text-flame-400"
+                  ? "bg-indigo-500/10 text-indigo-400"
                   : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
               }`
             }
@@ -45,7 +45,7 @@ export function Header({ sessionCount = 0 }: HeaderProps) {
             className={({ isActive }) =>
               `flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-flame-500/10 text-flame-400"
+                  ? "bg-indigo-500/10 text-indigo-400"
                   : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
               }`
             }
@@ -58,7 +58,7 @@ export function Header({ sessionCount = 0 }: HeaderProps) {
             className={({ isActive }) =>
               `flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-flame-500/10 text-flame-400"
+                  ? "bg-indigo-500/10 text-indigo-400"
                   : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
               }`
             }

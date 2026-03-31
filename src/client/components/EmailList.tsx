@@ -1,4 +1,4 @@
-import { Loader2, Mail, Paperclip } from "lucide-react";
+import { Loader2, Mail, Paperclip, Send } from "lucide-react";
 import type { EmailSummary } from "@/client/lib/api";
 import { fullDate, relativeTime } from "@/client/lib/time";
 
@@ -63,7 +63,14 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
               ) : null}
               <div className="flex items-center justify-between gap-2">
                 <strong className={`truncate text-sm ${unread ? "font-semibold text-zinc-100" : "font-medium text-zinc-300"}`}>
-                  {email.fromName || email.fromAddress}
+                  {email.isSent ? (
+                    <span className="inline-flex items-center gap-1">
+                      <Send className="inline h-3 w-3 text-indigo-400" />
+                      To: {email.recipientAddress}
+                    </span>
+                  ) : (
+                    email.fromName || email.fromAddress
+                  )}
                 </strong>
                 {loadingEmailId === email.id ? (
                   <Loader2 className="h-3 w-3 shrink-0 animate-spin text-flame-400" />
@@ -77,8 +84,14 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
                 {email.subject}
               </div>
               <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
-                <span className="truncate">{email.fromAddress}</span>
-                {showRecipientAddress ? (
+                {email.isSent ? (
+                  <span className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-indigo-300">
+                    Sent
+                  </span>
+                ) : (
+                  <span className="truncate">{email.fromAddress}</span>
+                )}
+                {!email.isSent && showRecipientAddress ? (
                   <span className="inline-flex items-center rounded-full border border-zinc-700/70 bg-zinc-800 px-2 py-0.5 text-zinc-400">
                     Delivered to {email.recipientAddress}
                   </span>
