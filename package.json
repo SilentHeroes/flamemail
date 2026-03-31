@@ -10,7 +10,6 @@
     "check": "npm run generate-types && tsc --noEmit",
     "preview": "vite preview",
     "cf:typegen": "npm run generate-types",
-    "admin:password": "node ./scripts/generate-admin-password.mjs",
     "email:local": "node ./scripts/send-local-email.mjs",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply flamemail-db --remote",

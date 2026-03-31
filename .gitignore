@@ -4,3 +4,4 @@ dist/
 .dev.vars
 coverage/
 *.log
+worker-configuration.d.ts
