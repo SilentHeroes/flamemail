@@ -42,7 +42,14 @@ export class InboxWebSocket extends DurableObject {
   }
 
   async webSocketClose(ws: WebSocket, code: number, reason: string, _wasClean: boolean) {
-    ws.close(code, reason);
+    // Codes 1005 and 1006 are reserved and cannot be sent in a close frame.
+    // Only echo back valid close codes (1000-4999, excluding reserved range).
+    const safeCode = code === 1005 || code === 1006 ? 1000 : code;
+    try {
+      ws.close(safeCode, reason);
+    } catch {
+      // Socket may already be closed
+    }
   }
 
   async webSocketError(ws: WebSocket) {

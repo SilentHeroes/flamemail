@@ -26,7 +26,11 @@ async function hashPassphrase(passphrase: string): Promise<string> {
     .join("");
 }
 
-async function deriveLocalPart(passphrase: string): Promise<string> {
+async function deriveLocalParts(
+  passphrase: string,
+  primaryDomain: string,
+  aliasDomain: string,
+): Promise<{ primary: string; alias: string }> {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
@@ -36,23 +40,41 @@ async function deriveLocalPart(passphrase: string): Promise<string> {
     ["deriveBits"],
   );
 
-  const bits = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      salt: encoder.encode("flamemail-relay-v1"),
-      iterations: 100_000,
-      hash: "SHA-256",
-    },
-    keyMaterial,
-    80, // 10 bytes → 10 char local part
-  );
+  // Derive 20 bytes — 10 per local part, using domain-specific salts
+  // so the two addresses have completely different local parts
+  const [primaryBits, aliasBits] = await Promise.all([
+    crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: encoder.encode(`flamemail-relay-v1:${primaryDomain}`),
+        iterations: 100_000,
+        hash: "SHA-256",
+      },
+      keyMaterial,
+      80,
+    ),
+    crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: encoder.encode(`flamemail-relay-v1:${aliasDomain}`),
+        iterations: 100_000,
+        hash: "SHA-256",
+      },
+      keyMaterial,
+      80,
+    ),
+  ]);
 
-  const bytes = new Uint8Array(bits);
   const alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const toLocalPart = (bits: ArrayBuffer) =>
+    Array.from(new Uint8Array(bits))
+      .map((b) => alphabet[b % alphabet.length])
+      .join("");
 
-  return Array.from(bytes)
-    .map((b) => alphabet[b % alphabet.length])
-    .join("");
+  return {
+    primary: toLocalPart(primaryBits),
+    alias: toLocalPart(aliasBits),
+  };
 }
 
 export async function createOrJoinRelay(
@@ -113,9 +135,13 @@ export async function createOrJoinRelay(
     throw new PublicError("Relay domains are not available");
   }
 
-  const localPart = await deriveLocalPart(passphrase);
-  const inboxAddress = `${localPart}@${primaryDomain}`;
-  const aliasAddress = `${localPart}@${aliasDomain}`;
+  const { primary: primaryLocalPart, alias: aliasLocalPart } = await deriveLocalParts(
+    passphrase,
+    primaryDomain,
+    aliasDomain,
+  );
+  const inboxAddress = `${primaryLocalPart}@${primaryDomain}`;
+  const aliasAddress = `${aliasLocalPart}@${aliasDomain}`;
 
   // Check for collisions
   const [existingInbox, existingAlias] = await Promise.all([
@@ -136,7 +162,7 @@ export async function createOrJoinRelay(
     await db.batch([
       db.insert(inboxes).values({
         id: inboxId,
-        localPart,
+        localPart: primaryLocalPart,
         domain: primaryDomain,
         fullAddress: inboxAddress,
         isPermanent: false,
