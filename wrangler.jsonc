@@ -18,7 +18,7 @@
 		{
 			"binding": "DB",
 			"database_name": "flamemail-db",
-			"database_id": "295ee19f-2928-4cfc-b0e7-383204292158",
+			"database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
 			"migrations_dir": "drizzle"
 		}
 	],
@@ -31,7 +31,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "SESSIONS",
-			"id": "2a4dd891ec4041a9a88a333490113c15"
+			"id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
 		}
 	],
 	"durable_objects": {
@@ -65,11 +65,11 @@
 	},
 	"routes": [
 		{
-			"pattern": "mail.easydemo.org",
+			"pattern": "mail.example.com",
 			"custom_domain": true
 		},
 		{
-			"pattern": "relay.orangeclouded-tmn.net",
+			"pattern": "relay.example.net",
 			"custom_domain": true
 		}
 	]

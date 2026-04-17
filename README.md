@@ -51,11 +51,11 @@ The relay creates a single shared inbox accessible via two different domain addr
 
 ### How It Works
 
-1. Party A enters a passphrase on `mail.easydemo.org`
+1. Party A enters a passphrase on `mail.example.com`
 2. PBKDF2 derives a deterministic local part (e.g., `xk7f9m2q`)
-3. One inbox is created: `xk7f9m2q@easydemo.org` (primary)
-4. An alias is registered: `xk7f9m2q@orangeclouded-tmn.net` (routes to the same inbox)
-5. Party B enters the same passphrase on `relay.orangeclouded-tmn.net` — gets access to the same inbox
+3. One inbox is created: `xk7f9m2q@example.com` (primary)
+4. An alias is registered: `yq3n8c1p@example.net` (routes to the same inbox — different local part per domain)
+5. Party B enters the same passphrase on `relay.example.net` — gets access to the same inbox
 6. Both addresses deliver to the same inbox. Both parties see all messages.
 7. Either party can compose and send outbound email from the inbox.
 8. Optional: register a notification email to get alerted when new messages arrive.
@@ -64,8 +64,8 @@ The relay creates a single shared inbox accessible via two different domain addr
 
 | Observer | Party A traffic | Party B traffic |
 |----------|----------------|----------------|
-| ISP A | Sends/receives email to/from `easydemo.org` | — |
-| ISP B | — | Sends/receives email to/from `orangeclouded-tmn.net` |
+| ISP A | Sends/receives email to/from `example.com` | — |
+| ISP B | — | Sends/receives email to/from `example.net` |
 | Cross-ISP | Two people using two unrelated email services. No link. | |
 
 ### Security Properties
@@ -142,27 +142,54 @@ npm run db:local:init
 npm run dev
 ```
 
+Local dev uses Turnstile's always-pass test keys from `.dev.vars.example`. Fill in a real `ADMIN_PASSWORD` (≥ 16 chars, ≥ 3 character classes) before testing admin flows.
+
 ## Deployment
 
+### 1. Configure your own domains
+
+This project requires **two domains** for the relay feature — one acts as the "primary" and the other as the "alias". You must own both in Cloudflare (added as zones in your account).
+
+Update the following files with your domains:
+
+- **`wrangler.jsonc`** → the two `routes[].pattern` entries (e.g., `mail.yourdomain.com` and `relay.yourotherdomain.net`)
+- **`src/worker/services/relay.ts`** → the `RELAY_DOMAINS` constant (the bare domains, e.g., `["yourdomain.com", "yourotherdomain.net"]`)
+
+If you only want a single-domain deployment (no covert relay), remove the second route and both relay domains — the rest of the app works fine with one domain.
+
+### 2. Create Cloudflare resources
+
+`wrangler.jsonc` has placeholder IDs that must be replaced with real resource IDs from your account:
+
 ```bash
-npm run db:migrate
-npx wrangler deploy
+wrangler d1 create flamemail-db             # copy database_id → wrangler.jsonc
+wrangler r2 bucket create flamemail-emails  # name must match bucket_name
+wrangler kv namespace create SESSIONS       # copy id → wrangler.jsonc
 ```
 
-### Required Secrets
+### 3. Configure secrets
 
 ```bash
 wrangler secret put ADMIN_PASSWORD       # ≥ 16 chars, ≥ 3 character classes
-wrangler secret put TURNSTILE_SITE_KEY   # from Turnstile dashboard
-wrangler secret put TURNSTILE_SECRET_KEY # from Turnstile dashboard
+wrangler secret put TURNSTILE_SITE_KEY   # public site key from Turnstile dashboard
+wrangler secret put TURNSTILE_SECRET_KEY # secret key from Turnstile dashboard
 ```
 
-### Required Cloudflare Configuration
+### 4. Build, migrate, and deploy
 
-- Email Routing enabled on each domain with catch-all → Worker
-- Email Sending enabled for outbound email from inbox addresses
-- Turnstile widget configured with deployed hostnames
-- D1, R2, KV resources created (wrangler handles this on first deploy)
+```bash
+npm run build          # vite build → dist/client (static assets) + dist/flamemail (worker)
+npm run deploy         # runs db:migrate (remote D1) then wrangler deploy
+```
+
+`npm run deploy` expands to `wrangler d1 migrations apply flamemail-db --remote && wrangler deploy`.
+
+### 5. Cloudflare dashboard configuration
+
+- **Email Routing**: enable on each sending domain; add a catch-all rule forwarding to the Worker
+- **Email Sending**: verify the outbound addresses you want to send from (required by the `send_email` binding)
+- **Turnstile**: add your deployed hostnames to the widget's allowed hostnames
+- **Domains**: register each active domain in the admin UI (`/admin`) so the Worker accepts inbound mail for it
 
 ## License
 
