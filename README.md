@@ -82,12 +82,12 @@ The relay creates a single shared inbox accessible via two different domain addr
 2. Worker `email()` handler receives `ForwardableEmailMessage`
 3. Parse recipient: extract local part, domain, handle plus-addressing (`name+tag@domain` → `name@domain`)
 4. Look up inbox by address. If not found, check relay alias table — resolve to the real inbox.
-5. Validate: domain active, inbox exists, inbox not expired, size ≤ 10MB, ≤ 10 attachments, ≤ 100 emails per inbox
-6. Parse MIME with `postal-mime`
+5. Validate: domain active, inbox exists, inbox not expired, size ≤ 10MB, ≤ 100 emails per inbox
+6. Parse MIME with `postal-mime`, then validate ≤ 10 attachments
 7. Batch insert to D1: email record + attachment records
 8. Store to R2: raw `.eml`, parsed body JSON, individual attachment blobs
 9. Notify Durable Object: `stub.notifyNewEmail()` broadcasts to all connected WebSocket clients
-10. If inbox has a notification email registered, send alert via `send_email` binding
+10. If this is a relay inbox and a notification email is registered, send alert via `send_email` binding
 
 ## Email Flow — Outbound
 
