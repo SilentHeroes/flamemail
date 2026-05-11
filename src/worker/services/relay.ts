@@ -14,7 +14,7 @@ const logger = createLogger("relay-service");
 
 // Relay uses these two domains as the (primary, alias) pair. Both must also be
 // registered and active in the `domains` table. Replace with your own domains.
-const RELAY_DOMAINS = ["example.com", "example.net"] as const;
+const RELAY_DOMAINS = ["thelookingcone11.net", "birdsarentreal.tech"] as const;
 
 function hoursToMs(hours: number) {
   return hours * 60 * 60 * 1000;

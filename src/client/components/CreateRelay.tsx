@@ -130,7 +130,7 @@ export function CreateRelay({ onCreated }: CreateRelayProps) {
         <div className="mt-4 flex gap-2">
           <button
             type="button"
-            className="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+            className="flex-1 rounded-lg bg-zinc-100 px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white"
             onClick={handleOpenInbox}
           >
             Open inbox
@@ -172,7 +172,7 @@ export function CreateRelay({ onCreated }: CreateRelayProps) {
               minLength={8}
               maxLength={256}
               autoComplete="off"
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 pr-10 text-sm text-zinc-200 outline-none transition-colors placeholder:text-zinc-600 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 pr-10 text-sm text-zinc-200 outline-none transition-colors placeholder:text-zinc-600 focus:border-zinc-300/30 focus:ring-1 focus:ring-zinc-300/20"
             />
             <button
               type="button"
@@ -201,7 +201,7 @@ export function CreateRelay({ onCreated }: CreateRelayProps) {
                   className={[
                     "rounded-lg border px-3 py-2 text-left transition-colors",
                     selected
-                      ? "border-blue-500/50 bg-blue-500/10 text-zinc-100"
+                      ? "border-zinc-300/30 bg-zinc-700/40 text-zinc-100"
                       : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300",
                   ].join(" ")}
                 >
@@ -221,7 +221,7 @@ export function CreateRelay({ onCreated }: CreateRelayProps) {
         />
 
         <button
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
           type="submit"
           disabled={submitting || !passphrase.trim() || passphrase.trim().length < 8 || !turnstileToken}
         >

@@ -63,7 +63,8 @@ function buildSrcDoc(html: string, bodyAttributes = "", headHtml = "") {
       }
 
       a {
-        color: #fb923c;
+        color: #e4e4e7;
+        text-decoration: underline;
       }
     </style>
     ${headHtml}
@@ -177,7 +178,7 @@ export function EmailDetail({ address, token, email, loading, canDelete, canView
           <div className="flex shrink-0 items-center gap-2">
             {onReply ? (
               <button
-                className="flex items-center gap-1.5 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-500"
+                className="flex items-center gap-1.5 rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-900 transition-colors hover:bg-white"
                 type="button"
                 onClick={() => onReply(email.fromAddress, email.subject)}
               >
@@ -240,12 +241,12 @@ export function EmailDetail({ address, token, email, loading, canDelete, canView
               <button
                 key={attachment.id}
                 type="button"
-                className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-left text-sm transition-colors hover:border-blue-500/30 hover:bg-zinc-800 disabled:opacity-50"
+                className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-left text-sm transition-colors hover:border-zinc-300/30 hover:bg-zinc-800 disabled:opacity-50"
                 onClick={() => handleDownload(attachment)}
                 disabled={busy || loading}
               >
                 {busy ? (
-                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-blue-400" />
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-zinc-300" />
                 ) : (
                   <Download className="h-4 w-4 shrink-0 text-zinc-500" />
                 )}

@@ -39,7 +39,7 @@ export function RelayNotification({ address, token, hasNotification }: RelayNoti
     <section className="rounded-xl border border-zinc-800/60 bg-zinc-900/50 p-4">
       <div className="flex items-center gap-2">
         {enabled ? (
-          <BellRing className="h-4 w-4 text-blue-400" />
+          <BellRing className="h-4 w-4 text-zinc-300" />
         ) : (
           <Bell className="h-4 w-4 text-zinc-500" />
         )}
@@ -74,13 +74,13 @@ export function RelayNotification({ address, token, hasNotification }: RelayNoti
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
                 autoComplete="off"
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 pl-9 pr-3 text-sm text-zinc-200 outline-none transition-colors placeholder:text-zinc-600 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20"
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 pl-9 pr-3 text-sm text-zinc-200 outline-none transition-colors placeholder:text-zinc-600 focus:border-zinc-300/30 focus:ring-1 focus:ring-zinc-300/20"
               />
             </div>
             <button
               type="submit"
               disabled={submitting || !email.trim() || !email.includes("@")}
-              className="flex shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex shrink-0 items-center gap-1.5 rounded-md bg-zinc-100 px-3 py-2 text-xs font-medium text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bell className="h-3.5 w-3.5" />}
               Enable

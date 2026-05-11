@@ -118,7 +118,7 @@ export function DomainManager({ token, domains, loading, onAdminSessionError, on
           onChange={(event) => setNewDomain(event.target.value)}
           placeholder="example.com"
           disabled={busy === "add"}
-          className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/80 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-flame-500/50 focus:ring-1 focus:ring-flame-500/30 disabled:opacity-50"
+          className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/80 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 outline-none transition-colors focus:border-zinc-300/40 focus:ring-1 focus:ring-zinc-300/20 disabled:opacity-50"
         />
 
         <label className="flex items-center gap-2 rounded-xl border border-zinc-700/60 bg-zinc-800/60 px-3 py-2.5 text-sm text-zinc-300">
@@ -127,7 +127,7 @@ export function DomainManager({ token, domains, loading, onAdminSessionError, on
             checked={newDomainActive}
             onChange={(event) => setNewDomainActive(event.target.checked)}
             disabled={busy === "add"}
-            className="h-4 w-4 rounded border-zinc-600 bg-zinc-900 text-flame-500 focus:ring-flame-500/40"
+            className="h-4 w-4 rounded border-zinc-600 bg-zinc-900 text-zinc-100 focus:ring-zinc-300/20"
           />
           Start active
         </label>
@@ -135,7 +135,7 @@ export function DomainManager({ token, domains, loading, onAdminSessionError, on
         <button
           type="submit"
           disabled={busy === "add" || newDomain.trim().length === 0}
-          className="flex items-center justify-center gap-1.5 rounded-xl bg-flame-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-flame-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center justify-center gap-1.5 rounded-xl bg-zinc-100 px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy === "add" ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

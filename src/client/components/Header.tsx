@@ -10,12 +10,12 @@ export function Header({ sessionCount = 0 }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/60 bg-zinc-950/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-            <Mail className="h-4 w-4 text-white" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-700/60 bg-zinc-900">
+            <Mail className="h-4 w-4 text-zinc-100" />
           </div>
           <span className="hidden sm:block">
-            <strong className="block text-sm font-semibold text-zinc-100">Disposable Mail</strong>
-            <small className="block text-[11px] text-zinc-500">Secure inboxes & relay</small>
+            <strong className="block text-sm font-semibold text-zinc-100">flamemail</strong>
+            <small className="block text-[11px] text-zinc-500">disposable inboxes &amp; secure relay</small>
           </span>
         </Link>
 

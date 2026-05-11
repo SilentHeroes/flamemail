@@ -16,7 +16,7 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
     <aside className="flex max-h-[calc(100vh-220px)] min-h-[560px] flex-col rounded-xl border border-zinc-800/60 bg-zinc-900/50">
       <div className="flex items-center justify-between gap-3 p-4 pb-0">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Messages</h2>
-        <span className="inline-flex min-w-[24px] items-center justify-center rounded-md bg-blue-600/10 px-2 py-0.5 text-xs font-semibold tabular-nums text-blue-400">
+        <span className="inline-flex min-w-[24px] items-center justify-center rounded-md bg-zinc-700/40 px-2 py-0.5 text-xs font-semibold tabular-nums text-zinc-300">
           {emails.length}
         </span>
       </div>
@@ -50,19 +50,19 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
               type="button"
               className={`group relative w-full rounded-lg px-3 py-2.5 text-left transition-colors ${
                 active
-                  ? "bg-blue-600/10"
+                  ? "bg-zinc-700/40"
                   : "hover:bg-zinc-800/50"
               }`}
               onClick={() => onSelect(email.id)}
             >
               {unread ? (
-                <span className="absolute left-1 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-blue-500" />
+                <span className="absolute left-1 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-zinc-100" />
               ) : null}
               <div className="flex items-center justify-between gap-2">
                 <strong className={`truncate text-sm ${unread ? "font-semibold text-zinc-100" : "font-medium text-zinc-300"}`}>
                   {email.isSent ? (
                     <span className="inline-flex items-center gap-1">
-                      <Send className="inline h-3 w-3 text-blue-400" />
+                      <Send className="inline h-3 w-3 text-zinc-300" />
                       To: {email.recipientAddress}
                     </span>
                   ) : (
@@ -70,7 +70,7 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
                   )}
                 </strong>
                 {loadingEmailId === email.id ? (
-                  <Loader2 className="h-3 w-3 shrink-0 animate-spin text-blue-400" />
+                  <Loader2 className="h-3 w-3 shrink-0 animate-spin text-zinc-300" />
                 ) : (
                   <span className="shrink-0 text-xs text-zinc-500" title={fullDate(email.receivedAt)}>
                     {relativeTime(email.receivedAt)}
@@ -82,7 +82,7 @@ export function EmailList({ inboxAddress, emails, selectedEmailId, loadingEmailI
               </div>
               <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
                 {email.isSent ? (
-                  <span className="inline-flex items-center rounded-md bg-blue-600/10 px-1.5 py-0.5 text-[11px] font-medium text-blue-400">
+                  <span className="inline-flex items-center rounded-md bg-zinc-700/40 px-1.5 py-0.5 text-[11px] font-medium text-zinc-300">
                     Sent
                   </span>
                 ) : (

@@ -209,7 +209,7 @@ export function InboxView({ onDeleted }: InboxViewProps) {
               <span className="text-sm text-zinc-500">Permanent inbox</span>
             ) : countdown ? (
               <span className="flex items-center gap-1.5 text-sm text-zinc-500">
-                <Timer className="h-3.5 w-3.5 text-blue-400" />
+                <Timer className="h-3.5 w-3.5 text-zinc-300" />
                 {countdown}
               </span>
             ) : (
@@ -252,7 +252,7 @@ export function InboxView({ onDeleted }: InboxViewProps) {
           ) : null}
           {!adminMode ? (
             <button
-              className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-500"
+              className="flex items-center gap-1.5 rounded-md bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-900 transition-colors hover:bg-white"
               type="button"
               onClick={() => {
                 setReplyTo(undefined);

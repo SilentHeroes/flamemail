@@ -32,7 +32,7 @@ export function About() {
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {FEATURES.map((f) => (
             <div key={f.title} className="rounded-xl border border-zinc-800/60 bg-zinc-900/50 p-4">
-              <f.icon className="h-4 w-4 text-blue-400" />
+              <f.icon className="h-4 w-4 text-zinc-300" />
               <h3 className="mt-2 text-sm font-semibold text-zinc-200">{f.title}</h3>
               <p className="mt-1 text-xs leading-relaxed text-zinc-500">{f.desc}</p>
             </div>
@@ -45,7 +45,7 @@ export function About() {
         <div className="mt-3 space-y-2">
           {STACK.map((s) => (
             <div key={s.label} className="flex items-start gap-3 rounded-xl border border-zinc-800/60 bg-zinc-900/50 px-4 py-3">
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-600/10 text-blue-400">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-zinc-700/40 text-zinc-300">
                 <s.icon className="h-3.5 w-3.5" />
               </span>
               <div className="min-w-0">
